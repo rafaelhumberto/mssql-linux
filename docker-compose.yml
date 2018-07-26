@@ -1,40 +1,35 @@
 version: "3.4"
 
 services:
- mssql-developer
-  image: rafaelhumberto/mssql-linux:developer
-  networks:
-    - local
-  environment:
-   ACCEPT_EULA: "Y"
-   SA_PASSWORD: "<YourStrong!Passw0rd>"
-   MSSQL_PID: "Developer"
-   SSIS_PID: "Developer"
-  ports:
-   - 1433:1433
-  deploy:
-   resources:
-    limits:
-     cpus: '4'
-     memory: 4G
-    reservations:
-     cpus: '2'
-     memory: 3G
-   mode: replicated
-   replicas: 1
-   restart_policy:
-    condition: on-failure
-    delay: 5m
-    max_attempts: 5
-    window: 5m
-  healthcheck:
-   test: ["CMD", "/var/opt/mssql/healthcheck.sh"]
-   interval: 5s
-   timeout: 3s
-   retries: 3
-   start_period: 5m    
-    
-networks:
-  local:
- external: no
- driver: overlay
+    mssql-instance:
+        image: "rafaelhumberto/mssql-linux:developer"
+        environment:
+            ACCEPT_EULA: "Y"
+            SA_PASSWORD: "<YourStrong!Passw0rd>"
+            MSSQL_PID: "Developer"
+            SSIS_PID: "Developer"
+        ports:
+            - 1433:1433
+        volumes:
+            - /host/to/path/mssql:/var/opt/mssql            
+        deploy:
+            resources:
+                limits:
+                    cpus: '4'
+                    memory: 4G
+                reservations:
+                    cpus: '2'
+                    memory: 3G
+            mode: replicated
+            replicas: 1
+            restart_policy:
+                condition: on-failure
+                delay: 1m
+                max_attempts: 3
+                window: 1m
+        healthcheck:
+            test: ["CMD", "/var/opt/mssql/healthcheck.sh"]
+            interval: 5s
+            timeout: 3s
+            retries: 3
+            start_period: 1m

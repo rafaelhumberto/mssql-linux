@@ -117,6 +117,7 @@ $ docker-compose up -d
 
 and wait for it to initialize completely.
 
+Don´t forget to create a data directory on a suitable volume on your host system, e.g. `/host/to/path/mssql`.
 
 Persistence
 -------------------
